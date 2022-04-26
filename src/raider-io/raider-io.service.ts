@@ -8,6 +8,7 @@ import { lastValueFrom } from 'rxjs';
 @Injectable()
 export class RaiderIoService {
   private readonly logger: Logger = new Logger();
+
   constructor(
     @Inject(forwardRef(() => HttpService))
     private readonly httpService: HttpService,
@@ -24,14 +25,17 @@ export class RaiderIoService {
         fields: 'gear',
       };
 
-      const response = this.httpService.get(
-        'https://raider.io/api/v1/characters/profile',
-        { params: params },
-      );
+      const response = this.httpService.get(process.env.RAIDERIO_URL, {
+        params: params,
+      });
 
       const promiseResponse = await lastValueFrom(response);
 
-      return buildObject(Character, promiseResponse.data);
+      const characterInfos = buildObject(Character, promiseResponse.data);
+
+      this.httpService.post(process.env.MANAGEMENT_GROUPS_URL, characterInfos);
+
+      return characterInfos;
     } catch (error) {
       this.logger.log(error);
     }
