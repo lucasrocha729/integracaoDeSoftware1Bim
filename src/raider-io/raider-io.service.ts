@@ -33,7 +33,12 @@ export class RaiderIoService {
 
       const characterInfos = buildObject(Character, promiseResponse.data);
 
-      this.httpService.post(process.env.MANAGEMENT_GROUPS_URL, characterInfos);
+      await lastValueFrom(
+        this.httpService.post(
+          process.env.MANAGEMENT_GROUPS_URL,
+          characterInfos,
+        ),
+      );
 
       return characterInfos;
     } catch (error) {
