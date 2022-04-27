@@ -1,7 +1,7 @@
 import { Property } from 'objectypes';
 
 export class Character {
-  @Property({ name: 'name', nullable: true })
+  @Property({ nullable: true })
   name: string;
 
   @Property({ name: 'class', nullable: true })

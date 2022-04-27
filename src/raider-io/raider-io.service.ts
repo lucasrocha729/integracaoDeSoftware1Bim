@@ -32,6 +32,7 @@ export class RaiderIoService {
       const promiseResponse = await lastValueFrom(response);
 
       const characterInfos = buildObject(Character, promiseResponse.data);
+      characterInfos.name = payload.name;
 
       await lastValueFrom(
         this.httpService.post(
