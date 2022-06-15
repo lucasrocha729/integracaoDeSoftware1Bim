@@ -4,6 +4,7 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { buildObject } from 'objectypes';
 import { Character } from './models/character.model';
 import { lastValueFrom } from 'rxjs';
+import { ClientProxy, RmqRecordBuilder } from '@nestjs/microservices';
 
 @Injectable()
 export class RaiderIoService {
@@ -12,6 +13,7 @@ export class RaiderIoService {
   constructor(
     @Inject(forwardRef(() => HttpService))
     private readonly httpService: HttpService,
+    @Inject('CLIENT_SERVICE') private client: ClientProxy,
   ) {}
 
   async sendInfos(payload: SendInfosDTO): Promise<Character> {
@@ -34,12 +36,18 @@ export class RaiderIoService {
       const characterInfos = buildObject(Character, promiseResponse.data);
       characterInfos.name = payload.name;
 
-      await lastValueFrom(
-        this.httpService.post(
-          process.env.MANAGEMENT_GROUPS_URL,
-          characterInfos,
-        ),
-      );
+      const record = new RmqRecordBuilder(characterInfos)
+        .setOptions({
+          headers: {
+            ['x-version']: '1.0.0',
+          },
+          priority: 1,
+        })
+        .build();
+
+      this.client.emit('characterInfosQueue', record);
+
+      this.logger.log('Message publish in characterInfosQueue');
 
       return characterInfos;
     } catch (error) {
