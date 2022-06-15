@@ -8,6 +8,10 @@
 $ npm install
 ```
 
+```bash
+$ docker-compose up -d
+```
+
 ## Running the app
 
 ```bash
@@ -17,3 +21,7 @@ $ npm install
 # watch mode
  npm run start:dev
 ```
+
+<h1> Message management </h1>
+Kafka: http://localhost:8080/ <br>
+Rabbit: http://localhost:15672/
