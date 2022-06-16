@@ -1,3 +1,4 @@
+import { SendInfosDTO } from './../raider-io/dto/sendInfosDTO.dto';
 import { GuildService } from './guild.service';
 import { Body, Controller, Post } from '@nestjs/common';
 
@@ -6,7 +7,7 @@ export class GuildController {
   constructor(private readonly guildService: GuildService) {}
 
   @Post()
-  sendInfos(@Body() payload: any): Promise<any> {
+  sendInfos(@Body() payload: SendInfosDTO): Promise<any> {
     return this.guildService.sendGuildInfos(payload);
   }
 }
