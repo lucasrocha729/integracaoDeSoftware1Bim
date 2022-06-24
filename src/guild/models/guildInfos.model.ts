@@ -11,4 +11,6 @@ export class GuildInfos {
   guildName: string;
 
   realm: string;
+
+  region: string;
 }

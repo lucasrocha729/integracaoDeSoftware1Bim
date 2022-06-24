@@ -35,6 +35,7 @@ export class GuildService {
 
       const guildInfo = buildObject(GuildInfos, promiseResponse.data);
       guildInfo.realm = payload.realm;
+      guildInfo.region = payload.region;
 
       this.client.emit('GuildInfosTopic', {
         pattern: 'GuildInfosTopic',
